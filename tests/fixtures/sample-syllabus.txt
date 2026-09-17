@@ -1,0 +1,58 @@
+CS 310 — Data Structures and Algorithms
+Fall 2026
+
+Instructor: Dr. Elena Chen
+Email: echen@university.edu
+Office Hours: Tue 2:00-4:00 PM, Room 214
+
+Course Description
+
+This course covers fundamental data structures and the algorithms that operate on
+them. Students will implement, analyse and compare structures including arrays,
+linked lists, hash tables, balanced trees and graphs. Prerequisites: CS 210.
+3 credit hours.
+
+Tentative Course Schedule
+
+Week 1 (Aug 25 - Aug 29): Course introduction, complexity analysis. Reading: Ch. 1
+Week 2 (Sep 1 - Sep 5): Arrays and linked lists. Reading: Ch. 2
+Week 3 (Sep 8 - Sep 12): Stacks, queues and recursion. Reading: Ch. 3
+Week 4 (Sep 15 - Sep 19): Hash tables. Reading: Ch. 4
+Week 5 (Sep 22 - Sep 26): Trees and traversal. Reading: Ch. 5
+Week 6 (Sep 29 - Oct 3): Balanced trees. Reading: Ch. 6
+Week 7 (Oct 6 - Oct 10): Heaps and priority queues. Reading: Ch. 7
+Week 8 (Oct 13 - Oct 17): Graphs. Reading: Ch. 8
+Week 9 (Oct 20 - Oct 24): Shortest paths. Reading: Ch. 9
+
+Important Dates
+
+Aug 25	Classes begin
+Sep 7	Labor Day — campus closed, no class
+Oct 12	Fall break, no class
+Nov 11	No class — reading day
+
+Assignments and Exams
+
+Assignment 1: Big-O analysis — due Sep 12, 2026 by 11:59 PM
+Quiz 1 — Sep 19 (in class, 20 minutes)
+Assignment 2: Linked list library — due October 3
+Midterm Exam 1 — Oct 8, 2026, in class
+Project Proposal due Oct 16
+Assignment 3: Hash table implementation — due 10/23/2026
+Quiz 2 — Oct 30 at 9:00 AM
+Assignment 4: Graph traversal — due Nov 6, 2026
+Midterm Exam 2 — Nov 12
+Final Project — due Nov 20, 2026 at 5:00 PM
+Final Exam: December 12, 2026 from 10:00 AM to 12:00 PM
+
+Grading Policy
+
+Assignments 30%
+Quizzes 10%
+Midterm exams 30%
+Final exam 20%
+Participation 10%
+
+Late work policy
+
+Assignments lose 10% per day late. No work will be accepted after 11/30/2026.
