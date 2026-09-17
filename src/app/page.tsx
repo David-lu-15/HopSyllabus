@@ -52,11 +52,11 @@ export default function DashboardPage() {
         <UploadSyllabus variant="hero" courses={[]} />
 
         <div className="card p-6">
-          <h2 className="text-base font-semibold">How it works</h2>
+            <h2 className="font-serif text-xl font-semibold text-brand">How it works</h2>
           <ol className="mt-4 space-y-4">
             {STEPS.map((step, index) => (
               <li key={step.title} className="flex gap-3">
-                <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-brand/20 text-sm font-semibold text-brand-soft">
+                <span className="grid size-7 shrink-0 place-items-center rounded-md bg-[#f1c400]/25 text-sm font-semibold text-brand">
                   {index + 1}
                 </span>
                 <span>
