@@ -51,12 +51,12 @@ const TYPE_PATTERNS: { type: EventType; regex: RegExp }[] = [
   {
     type: "project",
     regex:
-      /\b(projects?|capstone|portfolios?|presentations?|proposals?|milestones?|deliverables?|demonstrations?|demo|thesis|showcase)\b/i,
+      /\b(projects?|capstone|portfolios?|presentations?|proposals?|milestones?|deliverables?|demonstrations?|demo|thesis|showcase|posters?)\b/i,
   },
   {
     type: "assignment",
     regex:
-      /\b(assignments?|homework|hw\s?\d|problem sets?|psets?|labs?|worksheets?|essays?|papers?|reports?|write-?ups?|discussion posts?|reflections?|journal|drafts?|responses?|exercises?)\b/i,
+      /\b(assignments?|homework|hw\s?\d|problem sets?|psets?|labs?|worksheets?|essays?|papers?|reports?|write-?ups?|discussion posts?|reflections?|journal|drafts?|responses?|exercises?|surveys?)\b/i,
   },
   {
     type: "reading",
@@ -65,12 +65,13 @@ const TYPE_PATTERNS: { type: EventType; regex: RegExp }[] = [
 ];
 
 const DEADLINE_PATTERN =
-  /\b(due|deadline|submit|submission|upload|hand\s?in|turn\s?in|no later than|must be (?:submitted|completed|posted)|ends|closes|opens|take-?home|covers)\b/i;
+  /\b(due|deadline|submit|submission|upload|hand\s?in|turn\s?in|no later than|must be (?:submitted|completed|posted)|ends|closes|opens|take-?home|covers|calendar event)\b/i;
 
-const TIME_PRESSURE_PATTERN = /\b(by|before|at)\s+\d{1,2}(:\d{2})?\s*([ap]\.?\s?m\.?)?/i;
+const TIME_PRESSURE_PATTERN =
+  /\b(?:(?:by|before|at)\s+\d{1,2}(?::\d{2})?\s*([ap]\.?\s?m\.?)?|(?:from\s+)?\d{1,2}(?::\d{2})?\s*(?:[ap]\.?\s?m\.?)?\s*(?:to|[-–—])\s*\d{1,2}(?::\d{2})?\s*([ap]\.?\s?m\.?)?)/i;
 
 const NOISE_PATTERN =
-  /\b(no class|no classes|holiday|break|campus closed|classes? (?:begin|end|start)|reading day|office hours|final review session|drop deadline|withdraw(al)? deadline|last day to)\b/i;
+  /\b(no class|no classes|holiday|break|campus closed|classes? (?:begin|end|start)|reading day|office hours|final review session|drop deadline|withdraw(al)? deadline|last day to (?:add|drop|withdraw|register|enroll|audit|change))\b/i;
 
 const ENUMERATOR_PATTERN =
   /^(?:week|wk|module|unit|part|lecture|class|session|day|lesson)\s*\.?\s*\d+\s*[:.|•·\-–—]*\s*/i;
@@ -104,6 +105,14 @@ function sectionFor(line: string): SectionKind | null {
   const trimmed = line.trim();
   if (trimmed.length === 0 || trimmed.length > 72) return null;
   if (/[.!?]$/.test(trimmed)) return null;
+
+  // Specific assignment/test/event items are not section headings
+  if (/^(?:assignment|quiz|exam|test|hw|homework|project|calendar event)\b/i.test(trimmed)) {
+    if (!/^(?:assignments?|homework|exams?|quizzes|projects?|calendar|schedule)$/i.test(trimmed)) {
+      return null;
+    }
+  }
+
   const words = trimmed.split(/\s+/);
   const looksLikeHeading =
     words.length <= 9 &&
@@ -131,53 +140,91 @@ function isDateOnlyLine(text: string): boolean {
   if (time) {
     remainder = remainder.slice(0, time.index) + remainder.slice(time.index + time.raw.length);
   }
-  // Only separator punctuation may be left — "Quiz 2 — Oct 30" is a real row.
-  return !/[A-Za-z]/.test(remainder);
+  // Strip day names, punctuation, and whitespace
+  remainder = remainder
+    .replace(/\b(mon|tue|tues|wed|thu|thur|thurs|fri|sat|sun|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi, "")
+    .replace(/[\s:–—\-|.,]+/g, "");
+  return remainder.length === 0;
 }
 
-/** PDF text extraction often splits table cells onto separate lines. */
+function isTimeOnlyLine(text: string): boolean {
+  if (!/\d/.test(text)) return false;
+  const stripped = text
+    .replace(/\b\d{1,2}(?::\d{2})?\s*[ap]\.?\s?m\.?\b/gi, "")
+    .replace(/\b([01]?\d|2[0-3]):[0-5]\d\b/g, "")
+    .replace(/\b(due|by|at|before|to|from|until|between|and|pm|am|est|cst|pst|mst|edt|cdt|pdt|mdt)\b/gi, "")
+    .replace(/[\s:–—\-|.,]+/g, "");
+  return stripped.length === 0;
+}
+
+/** PDF and DOCX text extraction often splits table cells onto separate lines. */
 function prepareLines(rawText: string): Line[] {
   const normalised = rawText
     .replace(/\r\n?/g, "\n")
     .replace(/\u00a0/g, " ")
     .replace(/[\u2018\u2019]/g, "'")
-    .replace(/[\u201C\u201D]/g, '"');
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/([ap]\.?m\.?)(to|[-–—])/gi, "$1 $2 ");
 
   const rawLines = normalised
     .split("\n")
     .map((line) => line.replace(/[ \t]+/g, " ").trim())
     .filter((line) => line.length > 0 && !PAGE_NUMBER_PATTERN.test(line));
 
-  // Drop lines that repeat on every page (footers, headers, course codes).
+  // Drop lines that repeat on every page (footers, headers, course codes),
+  // but NEVER drop lines that contain dates, times, or deadline indicators.
   const counts = new Map<string, number>();
   for (const line of rawLines) {
     counts.set(line, (counts.get(line) ?? 0) + 1);
   }
-  const filtered = rawLines.filter(
-    (line) => line.length > 24 || (counts.get(line) ?? 0) < 3,
-  );
+  const filtered = rawLines.filter((line) => {
+    if (line.length > 24 || (counts.get(line) ?? 0) < 3) return true;
+    if (findDateTokens(line).length > 0) return true;
+    if (findTimeToken(line) !== null) return true;
+    if (DEADLINE_PATTERN.test(line) || TIME_PRESSURE_PATTERN.test(line)) return true;
+    return false;
+  });
 
-  // Re-join a lone date with the description that follows (or precedes) it.
-  const merged: string[] = [];
-  for (let index = 0; index < filtered.length; index += 1) {
-    const current = filtered[index];
-    const next = filtered[index + 1];
-    if (
-      next &&
-      !sectionFor(current) &&
-      !sectionFor(next) &&
-      next.length < 220 &&
-      (isDateOnlyLine(current) || isDateOnlyLine(next))
-    ) {
-      merged.push(`${current} ${next}`);
-      index += 1;
+  // Table cell assembly:
+  // 1. Merge trailing time-only lines into the preceding item
+  const withTimesMerged: string[] = [];
+  for (let i = 0; i < filtered.length; i++) {
+    const line = filtered[i];
+    if (isTimeOnlyLine(line) && withTimesMerged.length > 0) {
+      withTimesMerged[withTimesMerged.length - 1] += ` ${line}`;
+    } else {
+      withTimesMerged.push(line);
+    }
+  }
+
+  // 2. Associate date-only rows with following items (table row distribution)
+  const expanded: string[] = [];
+  let currentDatePrefix: string | null = null;
+  for (let i = 0; i < withTimesMerged.length; i++) {
+    const line = withTimesMerged[i];
+    if (sectionFor(line)) {
+      currentDatePrefix = null;
+      expanded.push(line);
       continue;
     }
-    merged.push(current);
+    if (isDateOnlyLine(line)) {
+      currentDatePrefix = line;
+      continue;
+    }
+    if (currentDatePrefix) {
+      if (findDateTokens(line).length > 0) {
+        currentDatePrefix = null;
+        expanded.push(line);
+      } else {
+        expanded.push(`${currentDatePrefix} ${line}`);
+      }
+    } else {
+      expanded.push(line);
+    }
   }
 
   let section: SectionKind = "unknown";
-  return merged.map((text) => {
+  return expanded.map((text) => {
     const detected = sectionFor(text);
     if (detected) section = detected;
     return { text, section };
@@ -200,9 +247,17 @@ function cleanTitle(line: string, spans: { index: number; length: number }[], fa
 
   let title = stripped
     .replace(ENUMERATOR_PATTERN, "")
+    // Drop day names left behind from dates ("Monday, Sep 15" => "Monday, ")
+    .replace(/^(?:mon(?:day)?|tue(?:sday)?|wed(?:nesday)?|thu(?:rsday)?|fri(?:day)?|sat(?:urday)?|sun(?:day)?)\b[\s,.\-–—]*/i, "")
+    // Drop Canvas item prefixes while preserving numbered assignments like "Assignment 1"
+    .replace(/^(?:assignment\s+(?=[A-Za-z])|calendar\s+event\s*[:-]?\s*)/i, "")
     // Drop the "due" / "submit" scaffolding that surrounded the date.
     .replace(
-      /[\s\-–—:;,.()[\]]*\b(due|deadline|closes|opens|submit(?:ted|s)?|turn(?:ed)? in|no later than)\b[\s:.;,\-–—]*/gi,
+      /[\s\-–—:;,.()[\]]*\b(due|deadline|closes|opens|turn(?:ed)? in|no later than)\b[\s:.;,\-–—]*/gi,
+      " ",
+    )
+    .replace(
+      /\b(submit(?:ted|s)?)\s+(?:by|at|before|on|until|to|from)\b/gi,
       " ",
     )
     // Clock times that survived (e.g. the end of "from 10:00 AM to 12:00 PM").
@@ -219,7 +274,7 @@ function cleanTitle(line: string, spans: { index: number; length: number }[], fa
   for (let pass = 0; pass < 3; pass += 1) {
     title = title
       .replace(
-        /[\s\-–—:;,]*\b(by|at|before|on|until|to|from|between|and|in|the)\b[\s:.;,\-–—]*$/i,
+        /[\s\-–—:;,]*\b(by|at|before|on|until|to|from|between|and|in|the|due)\b[\s:.;,\-–—]*$/i,
         " ",
       )
       .replace(/[\s\-–—:;,]+$/, "")
