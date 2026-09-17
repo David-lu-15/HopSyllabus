@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #06080f;
+  --color-surface: #0c1120;
+  --color-surface-2: #121a2d;
+  --color-surface-3: #1a2440;
+  --color-line: #1f2a44;
+  --color-ink: #e9edf9;
+  --color-muted: #8f9ab8;
+  --color-brand: #6366f1;
+  --color-brand-soft: #a5b4fc;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    background-image:
+      radial-gradient(55rem 55rem at 10% -12%, rgba(99, 102, 241, 0.22), transparent 62%),
+      radial-gradient(45rem 45rem at 102% -4%, rgba(14, 165, 233, 0.16), transparent 58%);
+    background-attachment: fixed;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  ::selection {
+    background-color: rgba(99, 102, 241, 0.4);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-soft);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-surface/80 backdrop-blur-sm;
+  }
+
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium whitespace-nowrap transition-colors disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand px-3.5 py-2 text-sm font-medium whitespace-nowrap text-white transition-colors hover:bg-indigo-500 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-line bg-surface-2/60 px-3.5 py-2 text-sm font-medium whitespace-nowrap text-ink transition-colors hover:bg-surface-3 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-danger {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-rose-500/40 bg-rose-500/10 px-3.5 py-2 text-sm font-medium whitespace-nowrap text-rose-300 transition-colors hover:bg-rose-500/20 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-icon {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-lg border border-line bg-surface-2/60 p-1.5 text-muted transition-colors hover:text-ink;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-line bg-canvas/70 px-3 py-2 text-sm text-ink placeholder:text-muted/70;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-xs font-medium tracking-wide text-muted uppercase;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset;
+  }
+
+  .section-title {
+    @apply text-sm font-semibold tracking-wide text-muted uppercase;
+  }
+}

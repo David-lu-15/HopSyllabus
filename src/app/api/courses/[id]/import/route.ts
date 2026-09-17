@@ -1,0 +1,84 @@
+import { NextResponse } from "next/server";
+
+import { EVENT_TYPE_LABELS, type EventType } from "@/lib/types";
+import {
+  createEvents,
+  getCourse,
+  listEvents,
+  refreshCourseBounds,
+  saveSyllabusFile,
+  takePendingUpload,
+  updateCourse,
+} from "@/lib/repo";
+import { firstIssue, importSchema } from "@/lib/validate";
+
+export const runtime = "nodejs";
+
+type RouteContext = { params: Promise<{ id: string }> };
+
+/** Commits the reviewed deadlines from an upload onto a course. */
+export async function POST(request: Request, context: RouteContext) {
+  const { id } = await context.params;
+  if (!getCourse(id)) {
+    return NextResponse.json({ error: "Course not found." }, { status: 404 });
+  }
+
+  const body = await request.json().catch(() => null);
+  const parsed = importSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: firstIssue(parsed.error) }, { status: 400 });
+  }
+
+  const { uploadId, events, course: coursePatch } = parsed.data;
+  const existing = listEvents(id);
+  const seen = new Set(
+    existing.map(
+      (event) =>
+        `${event.dueDate}|${event.title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()}`,
+    ),
+  );
+
+  const pending = uploadId ? takePendingUpload(uploadId) : null;
+
+  const fresh = events.filter((event) => {
+    const key = `${event.dueDate}|${event.title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+
+  const created = createEvents(
+    fresh.map((event) => ({
+      courseId: id,
+      title: event.title,
+      type: event.type as EventType,
+      dueDate: event.dueDate,
+      dueTime: event.dueTime ?? null,
+      notes: event.notes ?? (pending ? `${EVENT_TYPE_LABELS[event.type as EventType]} · ${pending.filename}` : null),
+      confidence: event.confidence ?? 0.8,
+      source: "parsed" as const,
+    })),
+  );
+
+  if (pending) {
+    saveSyllabusFile({
+      courseId: id,
+      filename: pending.filename,
+      fileType: pending.fileType,
+      sizeBytes: pending.sizeBytes,
+      text: pending.text,
+    });
+  }
+
+  if (coursePatch && Object.keys(coursePatch).length > 0) {
+    updateCourse(id, coursePatch);
+  }
+
+  refreshCourseBounds(id);
+
+  return NextResponse.json({
+    created: created.length,
+    skipped: events.length - fresh.length,
+    course: getCourse(id),
+  });
+}
