@@ -63,7 +63,11 @@ npm run typecheck  # tsc --noEmit
 npm run lint       # eslint
 ```
 
-Requires Node 22.5+ because persistence uses the built-in `node:sqlite` module.
+CI runs `typecheck`, `lint` and `build` on every pull request and every push to
+`main` (`.github/workflows/ci.yml`); those are the checks to pass before review.
+
+Requires Node 24+ because persistence uses the built-in `node:sqlite` module
+(available without a flag from Node 23.4).
 
 ## Architecture notes
 

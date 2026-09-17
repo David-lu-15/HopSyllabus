@@ -1,5 +1,7 @@
 # HopSyllabus
 
+[![CI](https://github.com/David-lu-15/HopSyllabus/actions/workflows/ci.yml/badge.svg)](https://github.com/David-lu-15/HopSyllabus/actions/workflows/ci.yml)
+
 Turn a course syllabus into a deadline calendar.
 
 Upload the PDF, Word document or text file your instructor handed out and
@@ -37,7 +39,8 @@ and builds a colour-coded calendar you can review, edit and export.
 ```sh
 npm install
 npm run dev      # http://localhost:3000
-```
+```4+** (for the built-in `node:sqlite` module, which is available
+without a flag from Node 23.4
 
 Requires **Node 22.5+** (for the built-in `node:sqlite` module).
 
