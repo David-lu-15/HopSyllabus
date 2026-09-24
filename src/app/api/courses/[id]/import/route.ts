@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { EVENT_TYPE_LABELS, type EventType } from "@/lib/types";
 import {
+  createCourse,
   createEvents,
   getCourse,
   listEvents,
@@ -19,9 +20,6 @@ type RouteContext = { params: Promise<{ id: string }> };
 /** Commits the reviewed deadlines from an upload onto a course. */
 export async function POST(request: Request, context: RouteContext) {
   const { id } = await context.params;
-  if (!getCourse(id)) {
-    return NextResponse.json({ error: "Course not found." }, { status: 404 });
-  }
 
   const body = await request.json().catch(() => null);
   const parsed = importSchema.safeParse(body);
@@ -30,6 +28,19 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   const { uploadId, events, course: coursePatch } = parsed.data;
+  if (!getCourse(id)) {
+    createCourse({
+      id,
+      name: coursePatch?.name?.trim() || "New course",
+      code: coursePatch?.code,
+      instructor: coursePatch?.instructor,
+      term: coursePatch?.term,
+      color: coursePatch?.color,
+      startDate: coursePatch?.startDate,
+      endDate: coursePatch?.endDate,
+    });
+  }
+
   const existing = listEvents(id);
   const seen = new Set(
     existing.map(
