@@ -136,6 +136,7 @@ export function getCourse(id: string): Course | null {
 }
 
 export type CourseInput = {
+  id?: string;
   name: string;
   code?: string | null;
   instructor?: string | null;
@@ -146,7 +147,7 @@ export type CourseInput = {
 };
 
 export function createCourse(input: CourseInput): Course {
-  const id = randomUUID();
+  const id = input.id ?? randomUUID();
   const color =
     input.color ??
     COURSE_COLORS[Math.floor(Math.random() * COURSE_COLORS.length)];
