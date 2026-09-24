@@ -52,7 +52,7 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [result, setResult] = useState<ParseResponse | null>(null);
   const [rows, setRows] = useState<ReviewRow[]>([]);
-  const [target, setTarget] = useState<string>(courseId ?? (courses.length > 0 ? courses[0].id : "new"));
+  const [target, setTarget] = useState<string>(courseId ?? "new");
   const [showText, setShowText] = useState(false);
   const [draft, setDraft] = useState({
     name: "",
