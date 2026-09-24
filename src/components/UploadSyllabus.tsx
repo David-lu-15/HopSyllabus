@@ -49,6 +49,7 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
   const [parsing, setParsing] = useState(false);
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [result, setResult] = useState<ParseResponse | null>(null);
   const [rows, setRows] = useState<ReviewRow[]>([]);
   const [target, setTarget] = useState<string>(courseId ?? (courses.length > 0 ? courses[0].id : "new"));
@@ -68,6 +69,7 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
 
   async function handleFile(file: File) {
     setError(null);
+    setSelectedFileName(file.name);
     setParsing(true);
     setSummary(null);
 
@@ -116,6 +118,7 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
     setRows([]);
     setSummary(null);
     setError(null);
+    setSelectedFileName(null);
     setShowText(false);
   }
 
@@ -226,6 +229,7 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
         >
           <input
             ref={inputRef}
+            id="syllabus-file-input"
             type="file"
             accept={ACCEPTED}
             className="hidden"
@@ -245,21 +249,23 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
               />
             </svg>
           </span>
-          <p className="mt-4 text-sm font-medium">
-            {parsing ? "Reading your syllabus…" : "Drag a syllabus here"}
+          <p className="mt-4 text-sm font-medium" aria-live="polite">
+            {parsing ? "Reading your syllabus…" : selectedFileName ? `${selectedFileName} selected` : "Drag a syllabus here"}
           </p>
           <p className="mt-1 text-xs text-muted">PDF, DOCX, TXT or Markdown · up to 15 MB</p>
-          <button
-            type="button"
-            className="btn-primary mt-4"
-            onClick={() => inputRef.current?.click()}
-            disabled={parsing}
+          <label
+            htmlFor="syllabus-file-input"
+            className={`btn-primary mt-4 ${parsing ? "pointer-events-none opacity-50" : ""}`}
           >
             {parsing ? "Parsing…" : "Choose file"}
-          </button>
+          </label>
         </div>
 
-        {error ? <p className="mt-3 text-sm text-rose-300">{error}</p> : null}
+        {error ? (
+          <p className="mt-3 text-sm text-rose-300" role="alert">
+            {error}
+          </p>
+        ) : null}
       </div>
     );
   }
