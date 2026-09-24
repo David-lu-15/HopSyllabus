@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { CalendarBoard } from "@/components/CalendarBoard";
 import { DeadlineList } from "@/components/DeadlineList";
+import { DeleteCourseButton } from "@/components/DeleteCourseButton";
 import { TypeDot } from "@/components/TypeChip";
 import { UploadSyllabus } from "@/components/UploadSyllabus";
 import { countdownLabel, daysUntil, prettyDate, todayIso } from "@/lib/format";
@@ -121,11 +122,14 @@ export default function DashboardPage() {
                     {course.name}
                   </h3>
                 </div>
-                <span
-                  className="mt-1 size-3 shrink-0 rounded-full"
-                  style={{ backgroundColor: course.color }}
-                  aria-hidden="true"
-                />
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span
+                    className="size-3 rounded-full"
+                    style={{ backgroundColor: course.color }}
+                    aria-hidden="true"
+                  />
+                  <DeleteCourseButton courseId={course.id} courseName={course.name} />
+                </div>
               </div>
 
               <p className="mt-2.5 text-xs text-muted">

@@ -73,11 +73,21 @@ function guessCourse(text: string, fileName: string): CourseDraft {
 
   const codeLine = draft.code ? lines.find((line) => line.includes(draft.code!)) : undefined;
   if (codeLine) {
-    const remainder = codeLine
+    let remainder = codeLine
+      .replace(/^#+\s*/, "")
       .replace(COURSE_CODE_PATTERN, "")
-      .replace(/^[\s:–—\-|.,]+/, "")
-      .replace(/[\s:–—\-|.,]+$/, "");
-    if (remainder.length >= 4 && remainder.length <= 90) draft.name = remainder;
+      .replace(/^[\s:–—\-|.,#*]+/, "")
+      .replace(/[\s:–—\-|.,#*]+$/, "");
+    remainder = remainder
+      .replace(/^(?:\.?\d{1,3}|section\s*\d{1,3})\s*[-–—:]*\s*/i, "")
+      .trim();
+    const withoutTerm = remainder
+      .replace(/\b(?:fall|spring|summer|winter)\b/gi, "")
+      .replace(/\b20\d{2}\b/g, "")
+      .replace(/^[\s:–—\-|.,#*]+/, "")
+      .replace(/[\s:–—\-|.,#*]+$/, "")
+      .trim();
+    if (withoutTerm.length >= 4 && withoutTerm.length <= 90) draft.name = withoutTerm;
   }
   if (!draft.name) {
     const candidate = lines.find(
@@ -90,13 +100,14 @@ function guessCourse(text: string, fileName: string): CourseDraft {
           line,
         ),
     );
-    if (candidate) draft.name = candidate.replace(/^[\s:–—\-|.,]+/, "").trim();
+    if (candidate) draft.name = candidate.replace(/^#+\s*/, "").replace(/^[\s:–—\-|.,#*]+/, "").trim();
   }
   if (!draft.name) draft.name = titleFromFileName(fileName);
 
-  const instructor = /(?:instructor|professor|prof\.?|lecturer|taught by|teacher)[ \t]*[:\-–]?[ \t]*([^\n]{2,70})/i.exec(
-    head,
-  );
+  const instructor =
+    /\b(?:instructor|professor|prof(?:\.|\b)|lecturer|taught by|teacher)[ \t]*[:\-–]?[ \t]*([^\n]{2,70})/i.exec(
+      head,
+    ) ?? /\b(Dr\.?\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)/.exec(head);
   if (instructor) {
     const value = instructor[1]
       .split(/\s{2,}|\||;|\b(?:email|office|phone|hours|zoom|@)\b/i)[0]

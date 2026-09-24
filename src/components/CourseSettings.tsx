@@ -89,6 +89,14 @@ export function CourseSettings({ course, syllabi }: { course: Course; syllabi: {
           >
             {open ? "Close" : "Edit details"}
           </button>
+          <button
+            type="button"
+            className="btn-ghost py-1.5 text-xs text-rose-400 hover:bg-rose-500/15 hover:text-rose-300"
+            onClick={removeCourse}
+            disabled={busy}
+          >
+            Delete
+          </button>
         </div>
       </div>
 
