@@ -64,6 +64,16 @@ export function databasePath(): string {
 
 function connectSqlite(): DatabaseSync {
   const file = databasePath();
+  if (process.env.VERCEL && !hasPostgres()) {
+    // Vercel's filesystem is read-only apart from /tmp, and /tmp is private to a
+    // single instance, so this deployment cannot share data between requests.
+    console.error(
+      "No hosted database is configured: falling back to %s. Courses saved by " +
+        "one request will not be visible to the next. Set DATABASE_URL (Neon) " +
+        "or POSTGRES_URL in the project's environment variables.",
+      file,
+    );
+  }
   mkdirSync(path.dirname(file), { recursive: true });
   const db = new DatabaseSync(file);
   db.exec("PRAGMA journal_mode = WAL;");
@@ -82,8 +92,30 @@ const globalForDb = globalThis as typeof globalThis & {
   __hopsyllabusReady?: Promise<void>;
 };
 
+/**
+ * Connection string for the hosted database.
+ *
+ * The Neon integration exposes `DATABASE_URL` (pooled) and
+ * `DATABASE_URL_UNPOOLED`; the older Vercel Postgres store used
+ * `POSTGRES_URL`/`POSTGRES_URL_NON_POOLING`. Accept either naming, otherwise a
+ * project with only one of them silently falls back to a per-instance file.
+ */
+function connectionString(): string | undefined {
+  return (
+    process.env.POSTGRES_URL ??
+    process.env.DATABASE_URL ??
+    process.env.POSTGRES_URL_NON_POOLING ??
+    process.env.DATABASE_URL_UNPOOLED
+  );
+}
+
 function hasPostgres(): boolean {
-  return Boolean(process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING);
+  return Boolean(connectionString());
+}
+
+/** Which storage this instance is actually talking to. */
+export function storageBackend(): "postgres" | "sqlite" {
+  return hasPostgres() ? "postgres" : "sqlite";
 }
 
 function toPostgresQuery(sql: string): string {
@@ -103,7 +135,7 @@ function getDb(): DatabaseSync {
 function getPool() {
   if (!globalForDb.__hopsyllabusPool) {
     globalForDb.__hopsyllabusPool = createPool({
-      connectionString: process.env.POSTGRES_URL ?? process.env.POSTGRES_URL_NON_POOLING,
+      connectionString: connectionString(),
     });
   }
   return globalForDb.__hopsyllabusPool;
