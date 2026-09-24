@@ -76,6 +76,14 @@ export function CourseSettings({ course, syllabi }: { course: Course; syllabi: {
           </a>
           <button
             type="button"
+            className="btn-danger py-1.5 text-xs"
+            onClick={removeCourse}
+            disabled={busy}
+          >
+            Remove course
+          </button>
+          <button
+            type="button"
             className="btn-ghost py-1.5 text-xs"
             onClick={() => setOpen(!open)}
           >
@@ -189,9 +197,6 @@ export function CourseSettings({ course, syllabi }: { course: Course; syllabi: {
           {error ? <p className="text-sm text-rose-300 sm:col-span-2">{error}</p> : null}
 
           <div className="flex flex-wrap justify-between gap-2 sm:col-span-2">
-            <button type="button" className="btn-danger" onClick={removeCourse} disabled={busy}>
-              Delete course
-            </button>
             <button
               type="button"
               className="btn-primary"
