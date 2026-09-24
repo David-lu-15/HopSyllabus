@@ -21,7 +21,6 @@ type RouteContext = { params: Promise<{ id: string }> };
 /** Commits the reviewed deadlines from an upload onto a course. */
 export async function POST(request: Request, context: RouteContext) {
   const { id } = await context.params;
-
   const body = await request.json().catch(() => null);
   const parsed = importSchema.safeParse(body);
   if (!parsed.success) {
@@ -93,17 +92,18 @@ export async function POST(request: Request, context: RouteContext) {
     skipped: events.length - fresh.length,
     course: await getCourse(id),
   });
-  const course = await getCourse(id);
-  if (course) {
+  const currentCourse = await getCourse(id);
+  const currentEvents = await listEvents(id);
+  if (currentCourse) {
     response.cookies.set(
       COURSE_SNAPSHOT_COOKIE,
-      encodeCourseSnapshot({ course }),
+      encodeCourseSnapshot({ course: currentCourse, events: currentEvents }),
       {
-      httpOnly: true,
-      maxAge: 60 * 15,
-      path: "/",
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: "/",
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
       },
     );
   }

@@ -450,3 +450,4 @@ export async function prunePendingUploads(olderThanHours = 24): Promise<void> {
   const cutoff = new Date(Date.now() - olderThanHours * 3600_000).toISOString();
   await run(`DELETE FROM pending_uploads WHERE created_at < ?`, [cutoff]);
 }
+
