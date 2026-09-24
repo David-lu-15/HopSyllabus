@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { CalendarBoard } from "@/components/CalendarBoard";
@@ -6,6 +7,7 @@ import { CourseSettings } from "@/components/CourseSettings";
 import { DeadlineList } from "@/components/DeadlineList";
 import { UploadSyllabus } from "@/components/UploadSyllabus";
 import { countdownLabel, prettyDate, todayIso } from "@/lib/format";
+import { COURSE_SNAPSHOT_COOKIE, decodeCourseSnapshot } from "@/lib/course-snapshot";
 import { getCourse, listEvents, listSyllabusFiles } from "@/lib/repo";
 
 export const dynamic = "force-dynamic";
@@ -14,10 +16,12 @@ type PageProps = { params: Promise<{ id: string }> };
 
 export default async function CoursePage({ params }: PageProps) {
   const { id } = await params;
-  const course = getCourse(id);
+  const storedCourse = getCourse(id);
+  const snapshot = storedCourse ? null : decodeCourseSnapshot((await cookies()).get(COURSE_SNAPSHOT_COOKIE)?.value);
+  const course = storedCourse ?? (snapshot?.course.id === id ? snapshot.course : null);
   if (!course) notFound();
 
-  const events = listEvents(course.id);
+  const events = storedCourse ? listEvents(course.id) : snapshot?.events ?? [];
   const syllabi = listSyllabusFiles(course.id);
   const today = todayIso();
 
