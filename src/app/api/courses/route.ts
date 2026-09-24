@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { COURSE_SNAPSHOT_COOKIE, encodeCourseSnapshot } from "@/lib/course-snapshot";
 import { createCourse, listCourseSummaries } from "@/lib/repo";
 import { courseCreateSchema, firstIssue } from "@/lib/validate";
 
@@ -17,5 +18,17 @@ export async function POST(request: Request) {
   }
 
   const course = createCourse(parsed.data);
-  return NextResponse.json({ course }, { status: 201 });
+  const response = NextResponse.json({ course }, { status: 201 });
+  response.cookies.set(
+    COURSE_SNAPSHOT_COOKIE,
+    encodeCourseSnapshot({ course, events: [] }),
+    {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    },
+  );
+  return response;
 }

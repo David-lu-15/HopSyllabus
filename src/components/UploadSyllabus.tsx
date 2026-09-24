@@ -159,7 +159,17 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
         `/api/courses/${destination}/import`,
         {
           method: "POST",
-          json: { uploadId: result.uploadId, events },
+          json: {
+            uploadId: result.uploadId,
+            events,
+            course: {
+              name: draft.name.trim() || result.course.name || "New course",
+              code: draft.code.trim() || null,
+              term: draft.term.trim() || null,
+              instructor: draft.instructor.trim() || null,
+              color: draft.color,
+            },
+          },
         },
       );
 
