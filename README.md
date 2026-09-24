@@ -55,22 +55,23 @@ npm run lint       # eslint
 
 ## Deploying to Vercel
 
-Import the repository into Vercel and add a Vercel Postgres integration. The
-integration must provide `POSTGRES_URL`; `POSTGRES_URL_NON_POOLING` is also
-accepted as a fallback. The app creates the `courses`, `events`, `syllabus_files`
-and `pending_uploads` tables and their indexes automatically on first use.
+Import the repository into Vercel and add a Vercel Postgres or Neon integration.
+The integration normally provides `POSTGRES_URL`; Neon integrations may instead
+provide `DATABASE_URL`. Both forms are supported. The app creates the `courses`,
+`events`, `syllabus_files` and `pending_uploads` tables and their indexes
+automatically on first use.
 
 Required Vercel environment variables:
 
 - `POSTGRES_URL` — the pooled connection string from Vercel Postgres.
-- `POSTGRES_URL_NON_POOLING` — optional direct connection string fallback when
-  `POSTGRES_URL` is not present.
+- `POSTGRES_URL_NON_POOLING` — optional direct connection string fallback.
+- `DATABASE_URL` or `DATABASE_URL_UNPOOLED` — accepted Neon equivalents.
 
 Set the variables for every Vercel environment that should share the database
 (Preview and Production as appropriate), then redeploy. Without either variable,
-the app uses local SQLite in `.data/hopsyllabus.db`; that fallback is suitable for
-local development only because Vercel's `/tmp` storage is ephemeral. The app has
-no authentication, so do not use a public deployment for private syllabus data.
+the app refuses to use ephemeral SQLite on Vercel instead of appearing to lose
+courses between requests. The app has no authentication, so do not use a public
+deployment for private syllabus data.
 
 ## How the parser works
 

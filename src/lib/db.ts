@@ -82,8 +82,23 @@ const globalForDb = globalThis as typeof globalThis & {
   __hopsyllabusReady?: Promise<void>;
 };
 
+const POSTGRES_ENV_KEYS = [
+  "POSTGRES_URL",
+  "POSTGRES_URL_NON_POOLING",
+  "DATABASE_URL",
+  "DATABASE_URL_UNPOOLED",
+] as const;
+
+function postgresUrl(): string | null {
+  for (const key of POSTGRES_ENV_KEYS) {
+    const value = process.env[key];
+    if (value) return value;
+  }
+  return null;
+}
+
 function hasPostgres(): boolean {
-  return Boolean(process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING);
+  return postgresUrl() !== null;
 }
 
 function toPostgresQuery(sql: string): string {
@@ -103,14 +118,21 @@ function getDb(): DatabaseSync {
 function getPool() {
   if (!globalForDb.__hopsyllabusPool) {
     globalForDb.__hopsyllabusPool = createPool({
-      connectionString: process.env.POSTGRES_URL ?? process.env.POSTGRES_URL_NON_POOLING,
+      connectionString: postgresUrl() ?? undefined,
     });
   }
   return globalForDb.__hopsyllabusPool;
 }
 
 async function ensureReady(): Promise<void> {
-  if (!hasPostgres()) return;
+  if (!hasPostgres()) {
+    if (process.env.VERCEL === "1") {
+      throw new Error(
+        "Persistent storage is not configured. Add a Vercel Postgres or Neon integration and redeploy.",
+      );
+    }
+    return;
+  }
   if (!globalForDb.__hopsyllabusReady) {
     globalForDb.__hopsyllabusReady = (async () => {
       const statements = SCHEMA.split(";").map((statement) => statement.trim()).filter(Boolean);
