@@ -1,0 +1,385 @@
+1
+Professional Writing and Ethics
+661.110.02
+Fall 2026
+Tuesdays and Thursdays 10:30-11:45am
+Croft Hall G02
+Dr. Cara Dickason
+cara.dickason@jhu.edu
+Office: Wyman Park Building W419
+Office Hours: Tuesdays 3-4pm and by appointment
+Course Assistant:
+Ayush Doshi
+adoshi5@jh.edu
+N115 Wyman Park Building or online
+Office Hours: Wednesday TBD
+Course Description
+Many professionals in STEM fields may not consider themselves writers, but in fact, effective
+communication and flexibility as a writer will serve you well in every professional setting you
+will inhabit. This course teaches students to write skillfully, think ethically, and communicate
+persuasively by responding to ethical challenges that arise between technology and society in the
+twenty-first century. Topics for this course are drawn from the WSE’s Grand Challenges and
+other ethical contexts relevant to engineering, including contemporary debates about the social,
+economic, and environmental responsibilities of professional engineers. Course activities are
+designed to hone students’ ability to write effectively as individuals and in teams, think critically
+about complex topics, evaluate and integrate evidence to support their ideas, communicate
+effectively with professional and public stakeholders, create effective visuals and infographics,
+and develop adaptability with new genres.
+This course will emphasize writing as a process, rather than a product, and consistent
+opportunities to revise will play a key part in that process. Specifically, we will consider writing
+as a process of communication, and we will be writing and communicating with each other this
+semester. Our course will be a writing workshop. You will read and write a lot, share your
+writing frequently, and respond to each other’s writing. We will all be collaborating to help each
+other say what we want to say in the most effective way possible. This format for a class calls on
+all of us to be generous and vulnerable, as writing is always personal, even when it is
+professional.
+2
+The specific topic for this course is data privacy and surveillance. As we share more and more
+data online, AI technology is adopted across industries, and algorithms increasingly determine
+our sense of reality, the stakes of data surveillance are continuously rising. We will examine
+some contemporary issues around data—including AI and intellectual property, targeted
+algorithms, data bias, and government access to personal data—and consider the ethical
+ramifications of whom our data does (or should) belong to, and where ethical responsibility may
+ultimately lie. Through the assignments for this course, you will research a specific challenge in
+data privacy and surveillance, propose an ethical position or solution related to that topic,
+translate that solution to a concrete policy proposal, and present your position to a public
+audience in a multi-modal format.
+Course Objectives
+These course objectives are focused on the skills I hope you take with you into other courses and
+your life outside of school.
+By thoughtfully engaging in this course, you will develop your ability to:
+• Write clear, concise, and audience-sensitive documents appropriate for professional and
+technical settings.
+• Respond to the needs of diverse professional audiences, especially decision-makers.
+• Identify the main message, craft an appropriate narrative or “story,” and determine the most
+effective genre/medium to use for any given situation.
+• Support ideas with appropriate evidence.
+• Quote, paraphrase, and cite in an appropriate style.
+• Learn how to identify, work with and write for specific audiences, important stakeholders, and
+subject-matter experts.
+• Edit and revise written work strategically and effectively.
+• Deliver and respond to feedback effectively.
+• Experience the different dynamics of writing individually versus collaboratively.
+• Collaborate effectively in team-based communication projects.
+• Build self-awareness through reflection on personal strengths/weaknesses as a communicator.
+• Articulate problems with complex ethical dimensions, dispassionately expressing the
+competing perspectives and interests of diverse stakeholders.
+ABET Accreditation Outcomes
+In fulfilling various ABET requirements, this course helps students develop an ability to:
+● identify, formulate, and solve complex engineering problems by applying principles of
+engineering, science, and mathematics
+3
+● apply engineering design to produce solutions that meet specified needs with
+consideration of public health, safety, and welfare, as well as global, cultural, social,
+environmental, and economic factors
+● communicate effectively with a range of audiences
+● recognize ethical and professional responsibilities in engineering situations and make
+informed judgments, which must consider the impact of engineering solutions in global,
+economic, environmental, and societal contexts
+● function effectively on a team whose members together provide leadership, create a
+collaborative and inclusive environment, establish goals, plan tasks, and meet objectives
+● develop and conduct appropriate experimentation, analyze and interpret data, and use
+engineering judgment to draw conclusions.
+● acquire and apply new knowledge as needed, using appropriate learning strategies.
+Textbooks
+1. Engineering Ethics by Deborah Johnson
+2. They Say/I Say by Cathy Birkenstein and Gerald Graff
+3. Writing Science in Plain English by Anne Greene
+Assignments
+Issue Brief (20%)
+A research report detailing a problem, need, or issue related to data privacy and identifying
+future possibilities to address the problem, aimed at professionals in your field. This assignment
+will include an annotated bibliography with short summaries of five sources relevant to your
+issue brief topic.
+Issue Brief Presentation (5%)
+Policy Brief (20%)
+A collaborative research report proposing a specific policy-based solution to a problem related to
+data privacy aimed at lawmakers. This assignment will also include a group memo laying out
+your plan for collaborative writing.
+Multi-modal Project (15%)
+A project incorporating multiple media that conveys an important idea about data privacy to a
+public audience.
+Final Reflection (5%)
+A final reflection on the semester’s work and your development as a writer, communicator, and
+ethical thinker.
+4
+Other Assignments
+Participation, Attitude, and Improvement (15%)
+This will be a dynamic, highly interactive course that centers your voices, both in writing and out
+loud. Its success depends on our commitment to being active, thoughtful community members.
+You are expected to engage respectfully and generously with everyone in the class. Attendance
+and tardiness also factor into this grade. If you have questions about the best ways for you to
+participate in class, please let me know.
+Reading Reflections (10%)
+Throughout the semester, I will ask you to turn in reflections on some of our readings. Some of
+these will be written at home before class and others written in class. I recommend coming to
+class with all readings annotated so that you have a few questions, quotes, or main ideas ready to
+share.
+Peer Feedback (10%)
+For each unit of the course, you will share writing with your peer workshop group and respond to
+their writing. We will discuss the details of that process later, but you will be expected to engage
+thoughtfully, respectfully, and generously with the work of your peers (as usual!). I am not
+asking you to be a judge or an editor, but to be an active reader.
+Grading & Grade Scale
+A note about grades: I hope that you put energy and thoughtfulness into the course because that
+is the way for all of us to get something out of it. I provide feedback on assignments with the
+goal of helping you develop your voice and skill as a writer, and I hope you will prioritize that
+growth. The grades I assign to your work are a measure of how successfully you have completed
+an assigned task, meant to give you guidance on how to continue to strengthen your skills as a
+professional writer and communicator. They are not a measure of your potential as a student or
+worth as a person, and the class is structured to value improvement rather than immediate
+mastery. I do not assign grades based on need, but I am invested in your success and want to help
+you improve. If you have questions about your grades after carefully considering my feedback,
+visit me during office hours. I encourage you to speak with me early in the semester about what
+your goals are for this course, including the final grade.
+As per the CLE’s policies, I do not curve grades according to others’ performance, but I do hold
+everyone to a high standard. In other words, this class is not an easy “A,” and you will be
+5
+expected to come to every class period and work diligently. Final scores are not rounded up. In
+order to earn a grade, your scores must fall completely within the specified range.
+A+ = 100%
+A = 94-99%
+A- = 90-93%
+B+ = 87-89%
+B = 83-86%
+B- = 80-82%
+C+ = 77-79%
+C = 73-76%
+C- = 70-72%
+D+ = 67-69%
+D = 63-66%
+D- = 60-62%
+F = 59%
+Course Policies
+Submitting Work
+Work handed in at any time after the date and time stated on the syllabus schedule will be
+penalized by 10% for each calendar day late. Extensions requested in advance are possible on a
+case-by-case basis.
+We will use Google Drive to submit and provide feedback on most assignments. Please speak to
+me if you have any trouble accessing or navigating Drive.
+Attendance
+This course is designed as a workshop that promotes active learning. As a result, your attendance
+and participation are key parts of your success in PWE.
+Life sometimes presents obstacles to attending class. You are permitted two unexcused absences
+without detriment to your grade. I do not need to know why you are missing these classes, nor do
+you need to provide me with any kind of documentation, but please do let me and the TA know
+as soon as possible if you know you will miss a class. You will still be responsible for any
+written work or peer feedback due that day. If you are sick, have an emergency, or are
+participating in religious observance, please speak with me as far ahead of time as possible, so
+that we can plan how to cover the work. I strongly encourage you to find a classmate who can
+share their notes for any missed classes. Absences beyond these circumstances will lower your
+grade significantly, as will arriving late to class repeatedly. I count three (significantly) tardy
+arrivals as an absence.
+Communication Expectations
+Email is the best way to reach me. I will respond to emails within 36 hours, though I may not
+respond after 5pm, before 9am, or on the weekends. If you email me on a Friday, I will respond
+by Monday, though I will try to respond sooner if it is a quick question with a short deadline (i.e.
+an easy clarification about an assignment, can’t access a reading, etc.). If you have an urgent
+issue, please put URGENT in the subject line and I will do my best to respond as soon as
+6
+possible. Please mention the course title and/or number in your email to me, especially if we are
+in more than one class together. If you have an emergency, you can text or call me at
+703-855-6367 (include your name please!).
+Classroom Community
+I am committed to creating a classroom community that values the diversity of perspectives that
+all students bring. Please join me in creating a welcoming and vibrant classroom environment.
+You can expect to be challenged intellectually by me, the TA, and your peers, which can
+sometimes feel uncomfortable. While it can be helpful to be challenged in order to learn and
+grow, at no time in this class should someone be treated unequally on the basis of any seen or
+unseen part of their identity.
+If you have concerns in this course about discrimination or unequal treatment, I invite you to
+speak with me. I will take your communication seriously and seek acceptable resolutions. Such a
+conversation will never impact your course grade. You may also report concerns to my
+department chair Pam Sheff (psheff@jhu.edu), the Assistant Dean of Outreach and Belonging
+Darlene Saporu (dsaporu@jhu.edu), or the Office of Institutional Equity (oie@jhu.edu).
+As a member of the faculty, I am designated by the university as a "responsible employee,"
+meaning that I am required to report any information pertaining to sexual harassment, assault,
+stalking, or other sexual misconduct to the Title IX Coordinator.
+Disability and Accessibility
+I am committed to making this course useful and accessible to the widest possible range of
+students. I will often need your help to make this commitment a reality. Please talk to me about
+ways that I can structure the course to suit your own learning needs, whether or not you are
+registered with Student Disability Services. If you need further accommodations that will be
+forwarded to all of your instructors, Disability Services is a resource that may afford you certain
+legally-protected accommodations. Make sure you submit this request as early as possible each
+semester. Find more information here: https://studentaffairs.jhu.edu/disabilities/
+Academic Honesty
+I expect that students will approach all course assignments with honesty and a strong sense of
+ethics. Please ask questions about how to avoid academic dishonesty. So long as you have not
+submitted an assignment, we can respond together to individual situations.
+To use another's work without responsible attribution can be considered plagiarism. I expect that
+you will cite or verbally give attribution for any other person's ideas, images, diagrams, or other
+relevant material that you use or otherwise draw inspiration from.
+Instances of plagiarism, cheating, or academically-dishonest activity will likely result in a failing
+grade for the assignment and, based upon severity, may result in an automatic "F" for the course.
+7
+The incident may also be reported to the JHU Ethics Board, which may result in a student being
+expelled from the university. For this course, ethical violations include using others’ or
+AI-generated work as your own, paraphrasing someone else's work, using previously-prepared
+assignments, plagiarizing material, reusing other people's assignments, using the internet and
+electronic devices in an improper way, collaborating in an unauthorized or deceitful way, altering
+graded assignments, forging or falsifying sources, lying to the instructor or teaching assistant,
+and facilitating academic dishonesty.
+All students are required to complete MSE Library's "Avoiding Plagiarism" module in Canvas
+during the first week of class. Instructions will be provided for completing this short and useful
+review of academic honesty principles.
+AI Policy: We will craft our AI policy together as a class.
+Family Accommodations Policy
+You are welcome to bring a family member to class on occasional days when your
+responsibilities require it (for example, if emergency childcare is unavailable, or for the health
+needs of a relative). Please be sensitive to the classroom environment, and if needed, you may
+leave the classroom and return as needed.
+Resources
+Technical Communication Lab
+The Technical Communication Lab provides free, confidential consultations for all JHU
+undergraduate students and WSE graduate students. Housed in the Center for Leadership
+Education in The Whiting School of Engineering, their consultants offer technical writing,
+presentation practice, interview practice, and English as a Second Language (ESL) appointments.
+You can find more information about the program and schedule an appointment through the
+Technical Communication Lab website:
+https://engineering.jhu.edu/cle/technical-communication-lab/
+Health and Well-being
+I encourage you to familiarize yourself with the services available at the Student Health and
+Wellness Center, which include your primary care needs. College is challenging. If you are
+struggling with anxiety, stress, depression, or other concerns, please consider contacting the JHU
+Counseling Center. If you are concerned about a friend, please encourage them to seek out
+mental health services as well. More information is available here:
+https://wellbeing.jhu.edu/MentalHealthServices/
+8
+Student Outreach & Support helps students manage physical and mental health concerns,
+personal and family emergencies, financial issues, and other obstacles that may arise during their
+college experience. Students can self-refer or refer a friend who may need extra support or help
+getting connected to resources. To connect with SOS, please visit their website, email
+deanofstudents@jhu.edu, call 410-516-7857, or schedule to meet with a Case Manager by
+visiting the website and filling out a referral form online.
+Course Schedule
+Week/Date Class Content Assignments/Readings Due
+Week 1
+Sep 1 & 3
+Course Introduction Tues: Read syllabus and bring your questions
+Thurs: Read Lamott, “Shitty First Drafts”
+Week 2
+Sep 8 & 10
+Professional Writing and
+Ethics
+Surveillance and Privacy:
+Who does your data belong
+to?
+Tues: Read Johnson, ch 3 “How Should
+Engineers Think About Ethics?”
+Nyholm, “Technology Ethics” excerpt
+Thurs: Read Rohlinger, “Is Big Brother
+Watching Us?”
+Washington Post, “Police departments weren’t
+looking for officers abusing Flock…”
+Week 3
+Sep 15 & 17
+Surveillance and Privacy
+cont’d
+Introduction to the Issue
+Brief - Framing a Problem
+Tues: Listen to Rabbit Hole, Episodes 1-4 (On
+Spotify, Apple Podcasts, etc.)
+Read “A major AI training data set contains
+millions of examples of personal data” (Guo)
+& “The AI Copyright Battle” (Berger)
+Thurs: “Big Tech’s Free Online Services
+Aren’t Costing Consumers Their Privacy”
+(Houalla, ITIF)
+&
+“Bespoke Pricing: What is the Invisible Hand
+Up To?” (Slover, CDT)
+Week 4 Researching Your Subject Tues: Read Birkenstein & Graff, “They Say:
+9
+Sep 22 & 24
+Summarizing Research
+Starting With What Others Are Saying”
+Bring in one scholarly source annotation
+Thurs:
+Read Birkenstein & Graff, “Her Point Is: The
+Art of Summarizing”
+Bring in two more annotations
+Week 5
+Sep 29 & Oct 1
+Working on the Issue Brief:
+Synthesizing Research
+Tues: Birkenstein & Graff, “As A Result:
+Connecting the Parts”
+Bring in min. 5 annotations and early work
+on issue brief
+Thurs: Greene, “Before You Write,” “Tell a
+Story,” & “Design Your Paragraphs”
+Issue Brief draft due Sunday 12pm
+Week 6
+Oct 6 & 8
+Issue Brief Workshops
+& Document Design
+Tues: Peer feedback due at 10am
+Thurs: Work on Issue Brief and Presentation
+Revised Issue Brief Due Sunday 12pm
+Week 7
+Oct 13 & 15
+Issue Brief Presentations Tues: Issue Brief Presentations
+Thurs: Issue Brief Presentations
+Week 8
+Oct 20 & 22
+Introduction to Writing
+Policy Briefs
+Fall Break Thursday
+Tues: Read “Parents are desperate to protect
+kids on social media. Why did the U.S. let a
+safety bill die?” (Paul)
+& “We Kill People Based on Metadata”
+(Cole)
+&
+Policy Briefs writing resource
+Week 9
+Oct 27 & 29
+Writing Policy Briefs
+&
+Collaborative Writing
+Data visualizations
+Tues: Read Schimel, “Making a Story Sticky”
+Group Memo due end of class
+Thurs: Browse the Storytelling with Data
+Chart Guide
+Read Storytelling with Data, “Shape Your
+10
+Story”
+Week 10
+Nov 3 & 5
+Working on the Policy
+Brief
+Tues & Thurs: Work on Policy Brief
+Policy Brief Draft due Sunday 12pm
+Week 11
+Nov 10 & 12
+Introduction to
+Multi-Modal Project
+Tues: Peer feedback due at 10am
+Thurs: Hard Fork podcast episode;
+Reply all podcast episode, “Permanent
+Record”
+Revised Policy Brief due Sunday 10pm
+Week 12
+Nov 17 & 19
+Working on Multi-modal
+project
+Tues & Thursday: Work on multi-modal
+project. Proposal due Tuesday end of class
+Week 13
+Nov 24 & 26
+Thanksgiving Break Project Draft due Sunday 12pm
+Week 14
+Dec 1 & 3
+Multi-modal Project
+Workshop
+Tues: Peer feedback due at 10am
+Thurs: Work on project
+Revised Project due Sunday 10pm
+Week 15
+Dec 8 & 10
+Present multi-modal
+projects
+Finals Week Final Reflection due during final exam
+period

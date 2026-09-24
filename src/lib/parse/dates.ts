@@ -90,23 +90,31 @@ export function findDateTokens(text: string): DateToken[] {
       },
     },
     {
-      // 9/3/2026, 09-03-26, 9.3
-      regex: /\b(\d{1,2})[/.-](\d{1,2})(?:[/.-](\d{2,4}))?\b/g,
+      // 9/3/2026, 09-03-26, 9.3, 9/14 & 16, 9/14 - 9/16
+      regex: /\b(\d{1,2})[/.-](\d{1,2})(?:\s*(?:&|and|to|through|thru|[-–—])\s*(\d{1,2}))?(?:[/.-](\d{2,4}))?\b/g,
       build: (m) => {
         const month = Number(m[1]);
         const day = Number(m[2]);
-        const year = m[3] ? normaliseYear(Number(m[3])) : null;
-        if (m[3] && year === null) return null;
+        const year = m[4] ? normaliseYear(Number(m[4])) : null;
+        if (m[4] && year === null) return null;
         const probeYear = year ?? 2026; // leap-year agnostic day validation
         if (!isValidYmd(probeYear, month, day)) return null;
+        if (m[3]) {
+          const secondDay = Number(m[3]);
+          if (!isValidYmd(probeYear, month, secondDay)) return null;
+        }
 
         const separator = m[0].includes("/") ? "/" : m[0].includes(".") ? "." : "-";
-        // "Weeks 2-3", "Chapters 4-5", "pages 12-15" are ranges, not dates.
+        // Hyphenated number pairs without a year ("1-4", "10-12") are ranges in prose, never dates.
+        if (separator === "-" && !m[4]) {
+          return null;
+        }
+        // "Weeks 2-3", "Chapters 4-5", "pages 12-15", "Episodes 1-4" are ranges, not dates.
         // Slash formats ("9/12") are almost always dates, so only guard the rest.
         if (separator !== "/") {
           const before = text.slice(Math.max(0, m.index - 24), m.index);
           if (
-            /\b(week|wk|weeks|chapter|chapters|ch|module|modules|unit|units|page|pages|pp|part|sections?|lecture|lectures|class|classes|day|days|hour|hours|hrs?|credits?|points?|pts|score|grades?|weight|version|v|figure|table|slide|exercises?|problems?|questions?|items?|nos?)\b[\s.]*$/i.test(
+            /\b(week|wk|weeks|chapter|chapters|ch|module|modules|unit|units|page|pages|pp|part|sections?|lecture|lectures|class|classes|day|days|hour|hours|hrs?|credits?|points?|pts|score|grades?|weight|version|v|figure|table|slide|exercises?|problems?|questions?|items?|nos?|episodes?|eps?)\b[\s.]*$/i.test(
               before,
             )
           ) {
@@ -120,30 +128,38 @@ export function findDateTokens(text: string): DateToken[] {
       },
     },
     {
-      // September 3rd, 2026  |  Sept. 3
+      // September 3rd, 2026  |  Sept. 3  |  Sep 1 & 3  |  Oct 6 - 8  |  Sep 1/3
       regex: new RegExp(
-        String.raw`\b${MONTH_WORD}\.?\s+(\d{1,2})${ORDINAL}(?:\s*,?\s*(\d{4}))?`,
+        String.raw`\b${MONTH_WORD}\.?\s+(\d{1,2})${ORDINAL}(?:\s*(?:&|and|to|through|thru|[-–—/])\s*(\d{1,2})${ORDINAL})?(?:\s*,?\s*(\d{4}))?`,
         "gi",
       ),
       build: (m) => {
         const month = monthFromWord(m[1]);
         const day = Number(m[2]);
-        const year = m[3] ? normaliseYear(Number(m[3])) : null;
+        const year = m[4] ? normaliseYear(Number(m[4])) : null;
         if (!month || !isValidYmd(year ?? 2026, month, day)) return null;
+        if (m[3]) {
+          const secondDay = Number(m[3]);
+          if (!isValidYmd(year ?? 2026, month, secondDay)) return null;
+        }
         return { year, month, day, raw: m[0], numeric: false };
       },
     },
     {
-      // 3 September 2026  |  3rd of Sept
+      // 3 September 2026  |  3rd of Sept  |  1 & 3 September  |  15-Sep-2026
       regex: new RegExp(
-        String.raw`\b(\d{1,2})${ORDINAL}\s+(?:of\s+)?${MONTH_WORD}\.?(?:\s*,?\s*(\d{4}))?`,
+        String.raw`\b(\d{1,2})${ORDINAL}(?:\s*(?:&|and|to|through|thru|[-–—/])\s*(\d{1,2})${ORDINAL})?[\s\-/]+(?:of\s+)?${MONTH_WORD}\.?(?:[\s\-/]*,?\s*(\d{4}))?`,
         "gi",
       ),
       build: (m) => {
         const day = Number(m[1]);
-        const month = monthFromWord(m[2]);
-        const year = m[3] ? normaliseYear(Number(m[3])) : null;
+        const month = monthFromWord(m[3]);
+        const year = m[4] ? normaliseYear(Number(m[4])) : null;
         if (!month || !isValidYmd(year ?? 2026, month, day)) return null;
+        if (m[2]) {
+          const secondDay = Number(m[2]);
+          if (!isValidYmd(year ?? 2026, month, secondDay)) return null;
+        }
         return { year, month, day, raw: m[0], numeric: false };
       },
     },
@@ -174,13 +190,32 @@ export function findDateTokens(text: string): DateToken[] {
   return kept.sort((a, b) => a.index - b.index);
 }
 
-/** Finds a clock time such as `11:59 PM`, `23:59` or `9 am`. */
+/** Finds a clock time such as `11:59 PM`, `23:59`, `midnight`, `noon` or `9 am`. */
 export function findTimeToken(text: string): TimeToken | null {
-  const withMeridiem = /\b(\d{1,2})(?::(\d{2}))?\s*([ap])\.?\s?m\.?\b/i.exec(text);
+  const midnight = /\b(?:at\s+|by\s+)?midnight\b/i.exec(text);
+  if (midnight) {
+    return {
+      time: "23:59",
+      raw: midnight[0],
+      index: midnight.index,
+    };
+  }
+
+  const noon = /\b(?:at\s+|by\s+)?noon\b/i.exec(text);
+  if (noon) {
+    return {
+      time: "12:00",
+      raw: noon[0],
+      index: noon.index,
+    };
+  }
+
+  const withMeridiem = /\b(\d{1,2})(?::(\d{2}))?\s*(?:([ap])\.?\s?m\.?|([ap])\b)/i.exec(text);
   if (withMeridiem) {
     let hour = Number(withMeridiem[1]);
     const minute = Number(withMeridiem[2] ?? 0);
-    const isPm = withMeridiem[3].toLowerCase() === "p";
+    const meridiem = (withMeridiem[3] ?? withMeridiem[4]).toLowerCase();
+    const isPm = meridiem === "p";
     if (hour <= 12 && minute < 60) {
       if (isPm && hour !== 12) hour += 12;
       if (!isPm && hour === 12) hour = 0;
@@ -308,3 +343,47 @@ export function daysBetween(fromIso: string, toIso: string): number {
   const to = new Date(`${toIso}T00:00:00Z`).getTime();
   return Math.round((to - from) / 86400000);
 }
+
+const DAY_INDICES: Record<string, number> = {
+  sunday: 0,
+  sun: 0,
+  monday: 1,
+  mon: 1,
+  tuesday: 2,
+  tues: 2,
+  tue: 2,
+  wednesday: 3,
+  wed: 3,
+  thursday: 4,
+  thurs: 4,
+  thu: 4,
+  friday: 5,
+  fri: 5,
+  saturday: 6,
+  sat: 6,
+};
+
+/**
+ * Resolves a named day of the week ("Tuesday", "Sunday") relative to an anchor date.
+ * If target is Sunday and anchor is a weekday, resolves to the Sunday ending that week.
+ */
+export function resolveDayOfWeek(anchorIso: string, dayName: string): string {
+  const target = DAY_INDICES[dayName.toLowerCase()];
+  if (target === undefined) return anchorIso;
+  const [y, m, d] = anchorIso.split("-").map(Number);
+  const anchor = new Date(Date.UTC(y, m - 1, d));
+  const anchorDay = anchor.getUTCDay();
+
+  let diff = target - anchorDay;
+  if (target === 0 && anchorDay > 0) {
+    diff = 7 - anchorDay;
+  } else if (diff < -1) {
+    diff += 7;
+  }
+  const result = new Date(anchor.getTime() + diff * 86400000);
+  const ry = result.getUTCFullYear();
+  const rm = String(result.getUTCMonth() + 1).padStart(2, "0");
+  const rd = String(result.getUTCDate()).padStart(2, "0");
+  return `${ry}-${rm}-${rd}`;
+}
+
