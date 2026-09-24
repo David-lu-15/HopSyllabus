@@ -1,14 +1,20 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 import { CalendarBoard } from "@/components/CalendarBoard";
 import { DeadlineList } from "@/components/DeadlineList";
+import { COURSE_SNAPSHOT_COOKIE, syncSnapshotToDb } from "@/lib/course-snapshot";
 import { todayIso } from "@/lib/format";
 import { listCourseSummaries, listEvents } from "@/lib/repo";
 
 export const dynamic = "force-dynamic";
 
-export default function CalendarPage() {
-  const courses = listCourseSummaries();
+export default async function CalendarPage() {
+  let courses = listCourseSummaries();
+  if (courses.length === 0) {
+    syncSnapshotToDb((await cookies()).get(COURSE_SNAPSHOT_COOKIE)?.value);
+    courses = listCourseSummaries();
+  }
   const events = listEvents();
   const today = todayIso();
 
