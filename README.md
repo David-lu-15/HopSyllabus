@@ -53,6 +53,19 @@ npm run typecheck  # tsc --noEmit
 npm run lint       # eslint
 ```
 
+## Deploying to Vercel
+
+This repository includes a Vercel configuration and requires Node 24 because the
+database uses the built-in `node:sqlite` module. Import the repository into Vercel
+and deploy with the default settings; the project configuration runs `npm ci` and
+`npm run build`.
+
+The current SQLite database is local and file-backed. Vercel functions have an
+ephemeral filesystem, so courses and uploaded syllabi are not durable across
+deployments or instances. Use this deployment for a review/demo environment only
+until `src/lib/db.ts` is replaced with a hosted database adapter. The app also has
+no authentication, so do not use a public deployment for private syllabus data.
+
 ## How the parser works
 
 1. **Extract text** — `src/lib/parse/extract-text.ts` picks the right reader for the
