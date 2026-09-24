@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 
-import { COURSE_SNAPSHOT_COOKIE, encodeCourseSnapshot } from "@/lib/course-snapshot";
 import { EVENT_TYPE_LABELS, type EventType } from "@/lib/types";
 import {
   createCourse,
@@ -87,25 +86,9 @@ export async function POST(request: Request, context: RouteContext) {
 
   await refreshCourseBounds(id);
 
-  const response = NextResponse.json({
+  return NextResponse.json({
     created: created.length,
     skipped: events.length - fresh.length,
     course: await getCourse(id),
   });
-  const currentCourse = await getCourse(id);
-  const currentEvents = await listEvents(id);
-  if (currentCourse) {
-    response.cookies.set(
-      COURSE_SNAPSHOT_COOKIE,
-      encodeCourseSnapshot({ course: currentCourse, events: currentEvents }),
-      {
-        httpOnly: true,
-        maxAge: 60 * 60 * 24 * 7, // 7 days
-        path: "/",
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
-      },
-    );
-  }
-  return response;
 }
