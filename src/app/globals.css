@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --color-canvas: #f4f7fa;
+  --color-surface: #ffffff;
+  --color-surface-2: #e9f1f8;
+  --color-surface-3: #d7e7f3;
+  --color-line: #c9d8e5;
+  --color-ink: #172b4d;
+  --color-muted: #53677d;
+  --color-brand: #002d72;
+  --color-brand-soft: #0077d8;
+  --color-gold: #f1c400;
+
+  --font-sans: var(--font-work-sans);
+  --font-serif: var(--font-source-serif);
+  --font-mono: var(--font-work-sans);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    background-image:
+      linear-gradient(135deg, rgba(0, 45, 114, 0.05), transparent 42%),
+      radial-gradient(38rem 26rem at 100% 0%, rgba(104, 172, 229, 0.2), transparent 70%);
+    background-attachment: fixed;
+    font-family: var(--font-sans), Tahoma, sans-serif;
+  }
+
+  ::selection {
+    background-color: rgba(241, 196, 0, 0.55);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-lg border border-line bg-surface/90 shadow-sm backdrop-blur-sm;
+  }
+
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-md px-3.5 py-2 text-sm font-medium whitespace-nowrap transition-colors disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-md bg-brand px-3.5 py-2 text-sm font-medium whitespace-nowrap text-white transition-colors hover:bg-[#003d96] disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-md border border-line bg-surface-2/60 px-3.5 py-2 text-sm font-medium whitespace-nowrap text-ink transition-colors hover:bg-surface-3 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-danger {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-md border border-[#a6192e]/40 bg-[#a6192e]/10 px-3.5 py-2 text-sm font-medium whitespace-nowrap text-[#8f1830] transition-colors hover:bg-[#a6192e]/20 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-icon {
+    @apply inline-flex cursor-pointer items-center justify-center rounded-md border border-line bg-surface-2/60 p-1.5 text-muted transition-colors hover:text-ink;
+  }
+
+  .field {
+    @apply w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-muted/70;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-xs font-medium tracking-wide text-muted uppercase;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium ring-1 ring-inset;
+  }
+
+  .section-title {
+    @apply text-sm font-semibold tracking-wide text-muted uppercase;
+  }
+}
