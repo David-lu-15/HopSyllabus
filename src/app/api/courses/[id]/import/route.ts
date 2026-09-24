@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { COURSE_SNAPSHOT_COOKIE, encodeCourseSnapshot } from "@/lib/course-snapshot";
 import { EVENT_TYPE_LABELS, type EventType } from "@/lib/types";
 import {
   createEvents,
@@ -76,9 +77,24 @@ export async function POST(request: Request, context: RouteContext) {
 
   refreshCourseBounds(id);
 
-  return NextResponse.json({
+  const response = NextResponse.json({
     created: created.length,
     skipped: events.length - fresh.length,
     course: getCourse(id),
   });
+  const course = getCourse(id);
+  if (course) {
+    response.cookies.set(
+      COURSE_SNAPSHOT_COOKIE,
+      encodeCourseSnapshot({ course, events: listEvents(id).slice(0, 12) }),
+      {
+      httpOnly: true,
+      maxAge: 60 * 15,
+      path: "/",
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      },
+    );
+  }
+  return response;
 }
