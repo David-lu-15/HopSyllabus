@@ -60,11 +60,12 @@ database uses the built-in `node:sqlite` module. Import the repository into Verc
 and deploy with the default settings; the project configuration runs `npm ci` and
 `npm run build`.
 
-The current SQLite database is local and file-backed. Vercel functions have an
-ephemeral filesystem, so courses and uploaded syllabi are not durable across
-deployments or instances. Use this deployment for a review/demo environment only
-until `src/lib/db.ts` is replaced with a hosted database adapter. The app also has
-no authentication, so do not use a public deployment for private syllabus data.
+The current SQLite database is local and file-backed. On Vercel it uses the
+writable `/tmp` directory so the app can start, but Vercel storage is ephemeral:
+courses and uploaded syllabi are not durable across deployments or instances. Use
+this deployment for a review/demo environment only until `src/lib/db.ts` is
+replaced with a hosted database adapter. The app also has no authentication, so do
+not use a public deployment for private syllabus data.
 
 ## How the parser works
 
