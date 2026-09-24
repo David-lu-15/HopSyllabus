@@ -1,12 +1,10 @@
 import Link from "next/link";
-import { cookies } from "next/headers";
 
 import { CalendarBoard } from "@/components/CalendarBoard";
 import { DeadlineList } from "@/components/DeadlineList";
 import { DeleteCourseButton } from "@/components/DeleteCourseButton";
 import { TypeDot } from "@/components/TypeChip";
 import { UploadSyllabus } from "@/components/UploadSyllabus";
-import { COURSE_SNAPSHOT_COOKIE, syncSnapshotToDb } from "@/lib/course-snapshot";
 import { countdownLabel, daysUntil, prettyDate, todayIso } from "@/lib/format";
 import { listCourseSummaries, listEvents } from "@/lib/repo";
 
@@ -45,12 +43,8 @@ function StatCard({
 }
 
 export default async function DashboardPage() {
-  let courses = listCourseSummaries();
-  if (courses.length === 0) {
-    syncSnapshotToDb((await cookies()).get(COURSE_SNAPSHOT_COOKIE)?.value);
-    courses = listCourseSummaries();
-  }
-  const events = listEvents();
+  const courses = await listCourseSummaries();
+  const events = await listEvents();
   const today = todayIso();
 
   if (courses.length === 0) {

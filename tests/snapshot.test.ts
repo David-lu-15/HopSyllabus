@@ -1,8 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { decodeCourseSnapshot, encodeCourseSnapshot, syncSnapshotToDb } from "../src/lib/course-snapshot";
-import { getCourse, listEvents } from "../src/lib/repo";
+import { decodeCourseSnapshot, encodeCourseSnapshot } from "../src/lib/course-snapshot";
 import type { Course, CourseEvent } from "../src/lib/types";
 
 test("encodeCourseSnapshot keeps size strictly under 3700 bytes and round-trips accurately", () => {
@@ -45,65 +44,3 @@ test("encodeCourseSnapshot keeps size strictly under 3700 bytes and round-trips 
   assert.equal(decoded.events[0].dueDate, events[0].dueDate);
 });
 
-test("syncSnapshotToDb restores course and events into SQLite if missing", () => {
-  const course: Course = {
-    id: "c-test-restore-99",
-    name: "Microbiology Laboratory",
-    code: "BIO 210",
-    instructor: "Dr. Rachel Green",
-    term: "Fall 2026",
-    color: "#10b981",
-    startDate: "2026-09-01",
-    endDate: "2026-12-10",
-    createdAt: new Date().toISOString(),
-  };
-
-  const events: CourseEvent[] = [
-    {
-      id: "e-restored-1",
-      courseId: course.id,
-      title: "Lab Report 1: Bacterial Staining",
-      type: "assignment",
-      dueDate: "2026-09-15",
-      dueTime: "17:00",
-      notes: null,
-      confidence: 1,
-      source: "parsed",
-      completed: false,
-      createdAt: course.createdAt,
-    },
-    {
-      id: "e-restored-2",
-      courseId: course.id,
-      title: "Midterm Practicum",
-      type: "test",
-      dueDate: "2026-10-20",
-      dueTime: "10:00",
-      notes: null,
-      confidence: 1,
-      source: "parsed",
-      completed: false,
-      createdAt: course.createdAt,
-    },
-  ];
-
-  const encoded = encodeCourseSnapshot({ course, events });
-
-  // Initially course does not exist in DB
-  assert.equal(getCourse(course.id), null);
-
-  // Sync snapshot
-  const synced = syncSnapshotToDb(encoded);
-  assert.ok(synced);
-
-  // Now course and events must exist in SQLite
-  const restoredCourse = getCourse(course.id);
-  assert.ok(restoredCourse);
-  assert.equal(restoredCourse.name, "Microbiology Laboratory");
-  assert.equal(restoredCourse.code, "BIO 210");
-
-  const restoredEvents = listEvents(course.id);
-  assert.equal(restoredEvents.length, 2);
-  assert.equal(restoredEvents[0].title, "Lab Report 1: Bacterial Staining");
-  assert.equal(restoredEvents[1].title, "Midterm Practicum");
-});

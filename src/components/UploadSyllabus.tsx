@@ -52,7 +52,7 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [result, setResult] = useState<ParseResponse | null>(null);
   const [rows, setRows] = useState<ReviewRow[]>([]);
-  const [target, setTarget] = useState<string>(courseId ?? (courses.length > 0 ? courses[0].id : "new"));
+  const [target, setTarget] = useState<string>(courseId ?? "new");
   const [showText, setShowText] = useState(false);
   const [draft, setDraft] = useState({
     name: "",
@@ -142,17 +142,7 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
       let destination = target;
 
       if (target === "new") {
-        const created = await apiFetch<{ course: { id: string } }>("/api/courses", {
-          method: "POST",
-          json: {
-            name: draft.name.trim() || result.course.name || "New course",
-            code: draft.code.trim() || null,
-            term: draft.term.trim() || null,
-            instructor: draft.instructor.trim() || null,
-            color: draft.color,
-          },
-        });
-        destination = created.course.id;
+        destination = crypto.randomUUID();
       }
 
       const payload = await apiFetch<{ created: number; skipped: number }>(

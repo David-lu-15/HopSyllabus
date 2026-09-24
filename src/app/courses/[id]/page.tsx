@@ -7,7 +7,7 @@ import { CourseSettings } from "@/components/CourseSettings";
 import { DeadlineList } from "@/components/DeadlineList";
 import { UploadSyllabus } from "@/components/UploadSyllabus";
 import { countdownLabel, prettyDate, todayIso } from "@/lib/format";
-import { COURSE_SNAPSHOT_COOKIE, syncSnapshotToDb } from "@/lib/course-snapshot";
+import { COURSE_SNAPSHOT_COOKIE, decodeCourseSnapshot } from "@/lib/course-snapshot";
 import { getCourse, listEvents, listSyllabusFiles } from "@/lib/repo";
 
 export const dynamic = "force-dynamic";
@@ -16,14 +16,13 @@ type PageProps = { params: Promise<{ id: string }> };
 
 export default async function CoursePage({ params }: PageProps) {
   const { id } = await params;
-  let storedCourse = getCourse(id);
-  const snapshot = storedCourse ? null : syncSnapshotToDb((await cookies()).get(COURSE_SNAPSHOT_COOKIE)?.value);
-  storedCourse = getCourse(id);
+  const storedCourse = await getCourse(id);
+  const snapshot = storedCourse ? null : decodeCourseSnapshot((await cookies()).get(COURSE_SNAPSHOT_COOKIE)?.value);
   const course = storedCourse ?? (snapshot?.course.id === id ? snapshot.course : null);
   if (!course) notFound();
 
-  const events = storedCourse ? listEvents(course.id) : snapshot?.events ?? [];
-  const syllabi = storedCourse ? listSyllabusFiles(course.id) : [];
+  const events = storedCourse ? await listEvents(course.id) : snapshot?.events ?? [];
+  const syllabi = await listSyllabusFiles(course.id);
   const today = todayIso();
 
   const open = events.filter((event) => !event.completed);

@@ -1,6 +1,5 @@
 import zlib from "node:zlib";
 
-import { getCourse, restoreCourseSnapshot } from "./repo";
 import type { Course, CourseEvent, EventType } from "./types";
 
 export const COURSE_SNAPSHOT_COOKIE = "hopsyllabus-course-snapshot";
@@ -136,22 +135,5 @@ export function decodeCourseSnapshot(value: string | undefined): CourseSnapshot 
     return null;
   } catch {
     return null;
-  }
-}
-
-/**
- * Restores the snapshot into the current lambda instance's SQLite database
- * if the course does not already exist in it.
- */
-export function syncSnapshotToDb(snapshotValue: string | undefined): CourseSnapshot | null {
-  const snapshot = decodeCourseSnapshot(snapshotValue);
-  if (!snapshot) return null;
-  try {
-    if (!getCourse(snapshot.course.id)) {
-      restoreCourseSnapshot(snapshot);
-    }
-    return snapshot;
-  } catch {
-    return snapshot;
   }
 }
