@@ -56,7 +56,10 @@ CREATE TABLE IF NOT EXISTS pending_uploads (
 
 export function databasePath(): string {
   const dir =
-    process.env.HOPSYLLABUS_DATA_DIR ?? path.join(process.cwd(), ".data");
+    process.env.HOPSYLLABUS_DATA_DIR ??
+    (process.env.VERCEL === "1"
+      ? path.join("/tmp", "hopsyllabus")
+      : path.join(process.cwd(), ".data"));
   return path.join(dir, "hopsyllabus.db");
 }
 
