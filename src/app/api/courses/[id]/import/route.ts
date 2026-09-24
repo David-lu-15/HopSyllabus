@@ -97,7 +97,7 @@ export async function POST(request: Request, context: RouteContext) {
   if (course) {
     response.cookies.set(
       COURSE_SNAPSHOT_COOKIE,
-      encodeCourseSnapshot({ course, events: listEvents(id).slice(0, 12) }),
+      encodeCourseSnapshot({ course }),
       {
       httpOnly: true,
       maxAge: 60 * 15,

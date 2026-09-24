@@ -4,7 +4,7 @@ export const COURSE_SNAPSHOT_COOKIE = "hopsyllabus-course-snapshot";
 
 export type CourseSnapshot = {
   course: Course;
-  events: CourseEvent[];
+  events?: CourseEvent[];
 };
 
 export function encodeCourseSnapshot(snapshot: CourseSnapshot): string {
