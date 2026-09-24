@@ -29,8 +29,8 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   const { uploadId, events, course: coursePatch } = parsed.data;
-  if (!getCourse(id)) {
-    createCourse({
+  if (!(await getCourse(id))) {
+    await createCourse({
       id,
       name: coursePatch?.name?.trim() || "New course",
       code: coursePatch?.code,
@@ -42,7 +42,7 @@ export async function POST(request: Request, context: RouteContext) {
     });
   }
 
-  const existing = listEvents(id);
+  const existing = await listEvents(id);
   const seen = new Set(
     existing.map(
       (event) =>
@@ -50,7 +50,7 @@ export async function POST(request: Request, context: RouteContext) {
     ),
   );
 
-  const pending = uploadId ? takePendingUpload(uploadId) : null;
+  const pending = uploadId ? await takePendingUpload(uploadId) : null;
 
   const fresh = events.filter((event) => {
     const key = `${event.dueDate}|${event.title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim()}`;
@@ -59,7 +59,7 @@ export async function POST(request: Request, context: RouteContext) {
     return true;
   });
 
-  const created = createEvents(
+  const created = await createEvents(
     fresh.map((event) => ({
       courseId: id,
       title: event.title,
@@ -73,7 +73,7 @@ export async function POST(request: Request, context: RouteContext) {
   );
 
   if (pending) {
-    saveSyllabusFile({
+    await saveSyllabusFile({
       courseId: id,
       filename: pending.filename,
       fileType: pending.fileType,
@@ -83,17 +83,17 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   if (coursePatch && Object.keys(coursePatch).length > 0) {
-    updateCourse(id, coursePatch);
+    await updateCourse(id, coursePatch);
   }
 
-  refreshCourseBounds(id);
+  await refreshCourseBounds(id);
 
   const response = NextResponse.json({
     created: created.length,
     skipped: events.length - fresh.length,
-    course: getCourse(id),
+    course: await getCourse(id),
   });
-  const course = getCourse(id);
+  const course = await getCourse(id);
   if (course) {
     response.cookies.set(
       COURSE_SNAPSHOT_COOKIE,
