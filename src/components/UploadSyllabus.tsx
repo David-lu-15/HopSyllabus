@@ -152,17 +152,13 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
           json: {
             uploadId: result.uploadId,
             events,
-            ...(target === "new"
-              ? {
-                  course: {
-                    name: draft.name.trim() || result.course.name || "New course",
-                    code: draft.code.trim() || null,
-                    term: draft.term.trim() || null,
-                    instructor: draft.instructor.trim() || null,
-                    color: draft.color,
-                  },
-                }
-              : {}),
+            course: {
+              name: draft.name.trim() || result.course.name || "New course",
+              code: draft.code.trim() || null,
+              term: draft.term.trim() || null,
+              instructor: draft.instructor.trim() || null,
+              color: draft.color,
+            },
           },
         },
       );

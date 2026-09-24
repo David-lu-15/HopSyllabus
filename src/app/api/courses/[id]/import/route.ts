@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { COURSE_SNAPSHOT_COOKIE, encodeCourseSnapshot } from "@/lib/course-snapshot";
+import { COURSE_SNAPSHOT_COOKIE, encodeCourseSnapshot, syncSnapshotToDb } from "@/lib/course-snapshot";
 import { EVENT_TYPE_LABELS, type EventType } from "@/lib/types";
 import {
   createCourse,
@@ -8,6 +8,7 @@ import {
   getCourse,
   listEvents,
   refreshCourseBounds,
+  restoreCourse,
   saveSyllabusFile,
   takePendingUpload,
   updateCourse,
@@ -21,6 +22,17 @@ type RouteContext = { params: Promise<{ id: string }> };
 /** Commits the reviewed deadlines from an upload onto a course. */
 export async function POST(request: Request, context: RouteContext) {
   const { id } = await context.params;
+  let course = getCourse(id);
+  if (!course) {
+    const cookieHeader = request.headers.get("cookie") ?? undefined;
+    const cookieVal = cookieHeader
+      ?.split(";")
+      .map((c) => c.trim())
+      .find((c) => c.startsWith(`${COURSE_SNAPSHOT_COOKIE}=`))
+      ?.slice(`${COURSE_SNAPSHOT_COOKIE}=`.length);
+    const snapshot = syncSnapshotToDb(cookieVal);
+    course = getCourse(id) ?? (snapshot?.course.id === id ? snapshot.course : null);
+  }
 
   const body = await request.json().catch(() => null);
   const parsed = importSchema.safeParse(body);
@@ -91,19 +103,19 @@ export async function POST(request: Request, context: RouteContext) {
   const response = NextResponse.json({
     created: created.length,
     skipped: events.length - fresh.length,
-    course: getCourse(id),
+    course: currentCourse,
   });
-  const course = getCourse(id);
-  if (course) {
+
+  if (currentCourse) {
     response.cookies.set(
       COURSE_SNAPSHOT_COOKIE,
-      encodeCourseSnapshot({ course }),
+      encodeCourseSnapshot({ course: currentCourse, events: currentEvents }),
       {
-      httpOnly: true,
-      maxAge: 60 * 15,
-      path: "/",
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: "/",
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
       },
     );
   }

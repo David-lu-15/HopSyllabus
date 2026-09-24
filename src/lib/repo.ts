@@ -463,3 +463,57 @@ export function prunePendingUploads(olderThanHours = 24): void {
   const cutoff = new Date(Date.now() - olderThanHours * 3600_000).toISOString();
   getDb().prepare(`DELETE FROM pending_uploads WHERE created_at < ?`).run(cutoff);
 }
+
+/* ----------------------------- snapshot restore ----------------------------- */
+
+export function restoreCourse(course: Course): Course {
+  getDb()
+    .prepare(
+      `INSERT OR REPLACE INTO courses (id, name, code, instructor, term, color, start_date, end_date, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    )
+    .run(
+      course.id,
+      course.name,
+      course.code ?? null,
+      course.instructor ?? null,
+      course.term ?? null,
+      course.color,
+      course.startDate ?? null,
+      course.endDate ?? null,
+      course.createdAt,
+    );
+  return getCourse(course.id)!;
+}
+
+export function restoreEvents(events: CourseEvent[]): void {
+  if (events.length === 0) return;
+  transaction(() => {
+    const insert = getDb().prepare(
+      `INSERT OR REPLACE INTO events (id, course_id, title, type, due_date, due_time, notes, confidence, source, completed, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    );
+    for (const e of events) {
+      insert.run(
+        e.id,
+        e.courseId,
+        e.title,
+        e.type,
+        e.dueDate,
+        e.dueTime ?? null,
+        e.notes ?? null,
+        e.confidence ?? 1,
+        e.source ?? "parsed",
+        e.completed ? 1 : 0,
+        e.createdAt ?? new Date().toISOString(),
+      );
+    }
+  });
+}
+
+export function restoreCourseSnapshot(snapshot: { course: Course; events: CourseEvent[] }): void {
+  restoreCourse(snapshot.course);
+  restoreEvents(snapshot.events);
+  refreshCourseBounds(snapshot.course.id);
+}
+

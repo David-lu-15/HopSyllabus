@@ -16,13 +16,14 @@ type PageProps = { params: Promise<{ id: string }> };
 
 export default async function CoursePage({ params }: PageProps) {
   const { id } = await params;
-  const storedCourse = getCourse(id);
-  const snapshot = storedCourse ? null : decodeCourseSnapshot((await cookies()).get(COURSE_SNAPSHOT_COOKIE)?.value);
+  let storedCourse = getCourse(id);
+  const snapshot = storedCourse ? null : syncSnapshotToDb((await cookies()).get(COURSE_SNAPSHOT_COOKIE)?.value);
+  storedCourse = getCourse(id);
   const course = storedCourse ?? (snapshot?.course.id === id ? snapshot.course : null);
   if (!course) notFound();
 
   const events = storedCourse ? listEvents(course.id) : snapshot?.events ?? [];
-  const syllabi = listSyllabusFiles(course.id);
+  const syllabi = storedCourse ? listSyllabusFiles(course.id) : [];
   const today = todayIso();
 
   const open = events.filter((event) => !event.completed);
