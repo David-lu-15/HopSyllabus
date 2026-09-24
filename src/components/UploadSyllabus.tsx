@@ -142,24 +142,28 @@ export function UploadSyllabus({ courses, courseId, variant = "panel" }: UploadS
       let destination = target;
 
       if (target === "new") {
-        const created = await apiFetch<{ course: { id: string } }>("/api/courses", {
-          method: "POST",
-          json: {
-            name: draft.name.trim() || result.course.name || "New course",
-            code: draft.code.trim() || null,
-            term: draft.term.trim() || null,
-            instructor: draft.instructor.trim() || null,
-            color: draft.color,
-          },
-        });
-        destination = created.course.id;
+        destination = crypto.randomUUID();
       }
 
       const payload = await apiFetch<{ created: number; skipped: number }>(
         `/api/courses/${destination}/import`,
         {
           method: "POST",
-          json: { uploadId: result.uploadId, events },
+          json: {
+            uploadId: result.uploadId,
+            events,
+            ...(target === "new"
+              ? {
+                  course: {
+                    name: draft.name.trim() || result.course.name || "New course",
+                    code: draft.code.trim() || null,
+                    term: draft.term.trim() || null,
+                    instructor: draft.instructor.trim() || null,
+                    color: draft.color,
+                  },
+                }
+              : {}),
+          },
         },
       );
 
